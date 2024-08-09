@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>随机数生成器</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #2d2d30;
+            color: white;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            transition: background-color 10s;
+        }
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: rgba(62, 62, 66, 0.8); /* 调整透明度 */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            width: 300px;
+            height: 80vh;
+        }
+        button, select {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #5a5a5e;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+        }
+        button:hover, select:hover {
+            background-color: #76767a;
+        }
+        .results-container {
+            margin-top: 20px;
+            width: 100%;
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-right: 10px; /* 增加内边距 */
+        }
+        .result {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        .result span:first-child {
+            font-size: 18px;
+            color: #aaaaaa;
+        }
+        @keyframes fade {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .fading {
+            animation: fade 2s infinite;
+        }
+        @keyframes rainbow {
+            0% { color: red; }
+            20% { color: orange; }
+            40% { color: yellow; }
+            60% { color: green; }
+            80% { color: blue; }
+            100% { color: violet; }
+        }
+        .rainbow {
+            animation: rainbow 5s infinite;
+        }
+        @keyframes pinkFade {
+            0% { background-color: #2d2d30; }
+            50% { background-color: pink; }
+            100% { background-color: #2d2d30; }
+        }
+        .pink-background {
+            animation: pinkFade 10s;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>随机数生成器</h1>
+        <select id="formatSelect">
+            <option value="LlllDD">格式1: Abcd12</option> <!-- 大写字母 + 小写字母 + 小写字母 + 小写字母 + 数字 + 数字 -->
+            <option value="lDlDlL">格式2: a1B2cD</option> <!-- 小写字母 + 数字 + 大写字母 + 数字 + 小写字母 + 大写字母 -->
+            <option value="DLdDLd">格式3: 1Ab2Cd</option> <!-- 数字 + 大写字母 + 小写字母 + 数字 + 大写字母 + 小写字母 -->
+            <option value="LLDDll">格式4: AB12cd</option> <!-- 大写字母 + 大写字母 + 数字 + 数字 + 小写字母 + 小写字母 -->
+            <option value="LLLLDDDD">格式5: ABCD1234</option> <!-- 大写字母 + 大写字母 + 大写字母 + 大写字母 + 数字 + 数字 + 数字 + 数字 -->
+        </select>
+        <button onclick="generateRandom()">生成随机数</button>
+        <div id="results" class="results-container"></div>
+    </div>
+
+    <script>
+        let count = 0;
+
+        function generateRandom() {
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            const digits = '0123456789';
+            const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A1FF33', '#33FFF5'];
+
+            const format = document.getElementById('formatSelect').value;
+
+            let randomString = '';
+            for (let i = 0; i < format.length; i++) {
+                if (format[i] === 'L') {
+                    randomString += letters.charAt(Math.floor(Math.random() * 26)); // 大写字母
+                } else if (format[i] === 'l') {
+                    randomString += letters.charAt(Math.floor(Math.random() * 52)).toLowerCase(); // 小写字母
+                } else if (format[i] === 'D') {
+                    randomString += digits.charAt(Math.floor(Math.random() * 10)); // 数字
+                }
+            }
+
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            count += 1;
+
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'result';
+
+            let resultClass = 'fading';
+            let resultStyle = `color:${color};`;
+            if (format === 'LlllDD' && randomString.endsWith('02')) {
+                resultClass = 'rainbow';
+                resultStyle = ''; // rainbow class will handle the color
+
+                // 设置背景为粉色明暗渐变
+                document.body.classList.add('pink-background');
+                setTimeout(() => {
+                    document.body.classList.remove('pink-background');
+                }, 10000); // 10秒后移除类
+            }
+
+            resultDiv.innerHTML = `<span>${count}</span> <span class="${resultClass}" style="${resultStyle}">${randomString}</span>`;
+
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.insertBefore(resultDiv, resultsContainer.firstChild);
+        }
+    </script>
+</body>
+</html>
