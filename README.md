@@ -2,4 +2,5 @@
 
 网页源码由chatgpt制作
 
-部署地址：ooz2024.github.io/sjs
+部署地址：ooz2024.github.io/sjs/
+
